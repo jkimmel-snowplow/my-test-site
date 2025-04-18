@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Add to Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+
+    .product {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 10px;
+      width: 300px;
+    }
+
+    .quantity-selector {
+      margin-top: 1rem;
+    }
+
+    .quantity-selector label {
+      margin-right: 0.5rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+
+  <!-- Snowplow JavaScript Tracker -->
+  <script async src="https://cdn.snowplowanalytics.com/libs/2.17.0/sp.js"></script>
+</head>
+<body>
+
+  <div class="product">
+    <h2>Awesome Product</h2>
+    <p>$19.99</p>
+    
+    <div class="quantity-selector">
+      <label for="quantity">Quantity:</label>
+      <select id="quantity">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+
+    <button onclick="addToCart()">Add to Cart</button>
+  </div>
+
+  <script>
+    // Initialize Snowplow Tracker
+    window.snowplow('newTracker', 'sp', 'localhost:9090', {
+      appId: 'web-app',
+      platform: 'web',
+      cookieDomain: 'example.com'
+    });
+
+    function addToCart() {
+      const quantity = document.getElementById('quantity').value;
+      const productName = 'Awesome Product';
+      const productPrice = 19.99;
+
+      alert(`Added ${quantity} item(s) to cart.`);
+
+      // Track add to cart as structured event
+      window.snowplow('trackStructEvent', 
+        'ecommerce',        // category
+        'add-to-cart',      // action
+        productName,        // label
+        'quantity',         // property
+        parseInt(quantity)  // value
+      );
+    }
+  </script>
+
+</body>
+</html>
